@@ -28,7 +28,7 @@ def list_all_books_in_library(library_name):
 def retrieve_librarian_for_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
-        librarian = library.librarian()
+        librarian = Librarian.objects.get(library=library)
         print(f"Librarian: {librarian.name}")
     except Library.DoesNotExist:
         print("Library not found.")
