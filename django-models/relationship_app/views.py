@@ -1,14 +1,10 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 from .models import Book
 
 # Create your views here.
 # function-based view
 def list_books(request):
-    books = Book.objects.all()
-    response_text = "List of Books:\n\n"
-    for book in books:
-        response_text += f"{book.title} by {book.author.name}\n"
-    return HttpResponse(response_text, content_type='text/plain')
+        return render(request, 'list_books.html')
 
 
 # Class-based view
