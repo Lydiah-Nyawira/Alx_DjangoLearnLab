@@ -4,7 +4,8 @@ from .models import Book
 # Create your views here.
 # function-based view
 def list_books(request):
-        return render(request, 'list_books.html')
+    books = Book.objects.all()
+    return render(request, 'list_books.html', {'books': books})
 
 
 # Class-based view
