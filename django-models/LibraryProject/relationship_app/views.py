@@ -19,12 +19,12 @@ class LibraryDetailView(DetailView):
 
 # SetUp Authentication Views
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'home')
 
 def user_login(request):
     if request.method == 'POST':
