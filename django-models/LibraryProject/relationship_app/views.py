@@ -24,7 +24,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 def home(request):
-    return render(request, 'home')
+    return render(request, 'index.html')
 
 def user_login(request):
     if request.method == 'POST':
