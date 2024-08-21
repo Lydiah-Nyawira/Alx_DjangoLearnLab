@@ -53,7 +53,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
-import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

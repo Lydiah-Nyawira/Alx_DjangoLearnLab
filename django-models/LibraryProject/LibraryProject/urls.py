@@ -16,7 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from relationship_app.views import list_books, LibraryDetailView
+from relationship_app.views import user_login, user_logout, user_register 
+
 urlpatterns = [
-    path('relationship_app', include('relationship_app.urls')),
     path('admin/', admin.site.urls),
+    path('', include('relationship_app.urls')),
+    path('books/', list_books, name='list_books'),
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
+    path('login/', user_login, name='login'),
+    path('logout/', user_logout, name='register'),
+    path('register', user_register, name='register'),
 ]
