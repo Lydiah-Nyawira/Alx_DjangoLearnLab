@@ -16,3 +16,7 @@ def retrieve_librarian(library_name):
     library = library.objects.get(name=library_name)
     librarian = Librarian.objects.get(library=library)
     return librarian
+
+if __name__ == "__main__":
+    author_name = "Author Name"
+    library_name = "Library Name"
