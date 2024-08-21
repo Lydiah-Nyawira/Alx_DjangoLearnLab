@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView
+from django.views.generic.detail import DetailView
 from .models import Book, Library
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.urls import reverse_lazy
 
 # Create your views here.
 # Function_based view
@@ -22,27 +24,7 @@ from django.shortcuts import render
 def home(request):
     return render(request, 'home.html')
                   
-def user_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaded_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('list_books') # Redirect to a page after login
-            else:
-                # If authentication fails
-                form.add_error(None, 'Invalid username or password')
-        else:
-            form = AuthenticationForm()
-        return render(request, 'login.html', {'form': form})
-
-def user_logout(request):
-    logout(request)
-    return render(request, 'logout.html') 
-
+# Custom registration view
 def user_register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -51,4 +33,13 @@ def user_register(request):
             return redirect('login')
     else:
         form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})          
+    return render(request, 'register.html', {'form': form})
+
+# Custom login view
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+
+# Custom logout view
+class CustomLogoutView(LogoutView):
+    template_name = 'logout.html'
+    next_page = reverse_lazy('login')  # Redirect to login page after logout
