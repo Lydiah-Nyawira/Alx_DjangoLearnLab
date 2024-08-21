@@ -25,11 +25,11 @@ def user_login(request):
             return redirect('home')  # Redirect to a home page or any other page
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'relationship_app/login.html', {'form': form})
 
 def user_logout(request):
     logout(request)
-    return render(request, 'logout.html')
+    return render(request, 'relationship_app/logout.html')
 
 def register(request):
     if request.method == 'POST':
@@ -39,4 +39,4 @@ def register(request):
             return redirect('login')
     else:
         form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'relationship_app/register.html', {'form': form})
