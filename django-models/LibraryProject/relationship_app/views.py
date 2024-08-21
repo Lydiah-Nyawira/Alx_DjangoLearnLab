@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
-from relationship_app.models import Book, Library
+from .models import Book, Library
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 
