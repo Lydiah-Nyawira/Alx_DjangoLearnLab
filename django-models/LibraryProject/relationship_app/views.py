@@ -17,13 +17,24 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'
 
 # Implementing User Authentication
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'home.html')
+                  
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('list_books')
+            username = form.cleaned_data.get('username')
+            password = form.cleaded_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('list_books') # Redirect to a page after login
+            else:
+                # If authentication fails
+                form.add_error(None, 'Invalid username or password')
         else:
             form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
