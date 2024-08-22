@@ -47,17 +47,23 @@ def register(request):
 
 
 # Define views for each user role and restrict access based on the user’s role.
-def check_role(user, role):
-    return user.is_authenticated and user.userprofile.role == role
+def is_admin(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
-@user_passes_test(lambda user: check_role (user, "Admin"))
+def is_librarian(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
+@user_passes_test(is_admin)
 def admin_view(request):
-    return HttpResponse("Welcome Admin")
+    return render(request, 'admin.html')
 
-@user_passes_test(lambda user: check_role (user, "Librarian"))
+@user_passes_test(is_librarian)
 def librarian_view(request):
-    return HttpResponse("Welcome Librarian")
+    return render(request, 'librarian.html')
 
-@user_passes_test(lambda user: check_role (user, "Librarian"))
+@user_passes_test(is_member)
 def member_view(request):
-    return HttpResponse("Welcome Member")
+    return render(request, 'member.html')
