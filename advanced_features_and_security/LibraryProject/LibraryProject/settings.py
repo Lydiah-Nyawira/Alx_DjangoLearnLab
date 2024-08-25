@@ -33,6 +33,12 @@ SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME-sniffing
 # HTTPS settings
 CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
 SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
+SECURE_SSL_REDIRECT = True # # Redirect all HTTP requests to HTTPS
+
+# Set the HSTS policy to ensure that the site is only accessed via HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 
 ALLOWED_HOSTS = []
