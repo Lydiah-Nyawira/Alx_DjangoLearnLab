@@ -15,7 +15,7 @@ admin.site.register(Book, BookAdmin)
 from .models import CustomUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-class UserAdmin(BaseUserAdmin):
+class CustomUserAdmin(BaseUserAdmin):
     model = CustomUser
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
@@ -33,4 +33,4 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('username', 'first_name', 'last_name')
     ordering = ('username',)
 
-admin.site.register(CustomUser, UserAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
