@@ -7,9 +7,12 @@ from .models import Book, Author
 
 class BookTests(APITestCase):
     def setUp(self):
+        # Create a user for testing
         self.user = User.objects.create_user(username='testuser', password='testpass')
-        self.token = Token.objects.create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        
+        # Log in the user
+        self.client.login(username='testuser', password='testpass')
+
         self.author = Author.objects.create(name='Test Author')
         self.book = Book.objects.create(title='Test Book', publication_year=2023, author=self.author)
         self.book_list_url = reverse('book-list')
@@ -59,6 +62,9 @@ class BookTests(APITestCase):
         self.assertEqual(response.data['results'][0]['title'], 'Test Book')
 
     def test_permissions(self):
+        # Log out the user to test permissions
+        self.client.logout()
+        
         self.client.credentials()  # Remove authentication
         response = self.client.get(self.book_list_url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
