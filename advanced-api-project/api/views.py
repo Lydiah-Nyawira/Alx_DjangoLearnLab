@@ -16,7 +16,7 @@ class BookCreateView(generics.CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BookListView(generics.ListCreateAPIView):
+class BookListCreateView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [AllowAny]  # Open to all users
