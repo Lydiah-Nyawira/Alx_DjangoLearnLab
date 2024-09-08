@@ -51,6 +51,22 @@ This project demonstrates advanced API development using Django and Django REST 
 - `PUT /books/<id>/update/`: Update a specific book by ID (authentication required).
 - `DELETE /books/<id>/delete/`: Delete a specific book by ID (authentication required).
 
+- **List Books**
+  - **URL**: `/books/`
+  - **Method**: `GET`
+  - **Query Parameters**:
+    - `title` (string): Filter books by title (case-insensitive).
+    - `author` (string): Filter books by author (case-insensitive).
+    - `publication_year` (integer): Filter books by publication year.
+    - `search` (string): Search books by title or author.
+    - `ordering` (string): Order results by field (e.g., `title`, `publication_year`).
+
+**Examples**:
+
+- **Filter by Title**: `/books/?title=SomeTitle`
+- **Search by Author**: `/books/?search=SomeAuthor`
+- **Order by Publication Year**: `/books/?ordering=publication_year`
+
 **Permissions:**
 - `GET /books/` and `GET /books/<id>/` are publicly accessible.
 - `POST /books/create/`, `PUT /books/<id>/update/`, and `DELETE /books/<id>/delete/` require authentication.
