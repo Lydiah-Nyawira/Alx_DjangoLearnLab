@@ -70,3 +70,13 @@ This project demonstrates advanced API development using Django and Django REST 
 **Permissions:**
 - `GET /books/` and `GET /books/<id>/` are publicly accessible.
 - `POST /books/create/`, `PUT /books/<id>/update/`, and `DELETE /books/<id>/delete/` require authentication.
+
+## Unit Testing
+
+The API includes unit tests to ensure its functionality:
+
+- **CRUD Operations**: Tests for creating, retrieving, updating, and deleting books.
+- **Filtering**: Verifies filtering functionality.
+- **Searching**: Ensures search functionality is accurate.
+- **Ordering**: Confirms sorting and ordering of results.
+- **Permissions**: Checks if permissions are enforced correctly.
