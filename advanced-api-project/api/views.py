@@ -1,60 +1,49 @@
-from rest_framework import status
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from .models import Book
 from .serializers import BookSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
-class BookListView(APIView):
-    """
-    View to list all books.
-    """
-    def get(self, request):
-        books = Book.objects.all()
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)
+class BookListView(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [AllowAny]  # Public read access
 
-class BookCreateView(APIView):
-    """
-    View to create a new book.
-    """
-    def post(self, request):
-        serializer = BookSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class BookCreateView(generics.CreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]  # Authentication required for creation
 
-class BookDetailView(APIView):
-    """
-    View to retrieve, update, or delete a specific book.
-    """
-    def get_object(self, pk):
-        try:
-            return Book.objects.get(pk=pk)
-        except Book.DoesNotExist:
-            return None
+    def perform_create(self, serializer):
+        # saving the instance
+        serializer.save()
 
-    def get(self, request, pk):
-        book = self.get_object(pk)
-        if book is not None:
-            serializer = BookSerializer(book)
-            return Response(serializer.data)
-        return Response({'error': 'Book not found'}, status=status.HTTP_404_NOT_FOUND)
+    def create(self, request, *args, **kwargs):
+        # Customize the response or handle exceptions
+        response = super().create(request, *args, **kwargs)
+        return response
 
-    def put(self, request, pk):
-        book = self.get_object(pk)
-        if book is not None:
-            serializer = BookSerializer(book, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({'error': 'Book not found'}, status=status.HTTP_404_NOT_FOUND)
+class BookDetailView(generics.RetrieveAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [AllowAny]  # Public read access
 
-    def delete(self, request, pk):
-        book = self.get_object(pk)
-        if book is not None:
-            book.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({'error': 'Book not found'}, status=status.HTTP_404_NOT_FOUND)
+class BookUpdateView(generics.UpdateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]  # Authentication required for updates
+
+    def perform_update(self, serializer):
+        # Add custom behavior before saving the updated instance, if needed
+        serializer.save()
+
+    def update(self, request, *args, **kwargs):
+        # Customize the response or handle exceptions
+        response = super().update(request, *args, **kwargs)
+        return response
+
+class BookDeleteView(generics.DestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]  # Authentication required for deletion

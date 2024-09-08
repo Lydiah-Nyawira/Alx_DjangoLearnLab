@@ -43,35 +43,14 @@ This project demonstrates advanced API development using Django and Django REST 
 
 ## API Endpoints
 
-- **List Books**
-  - **URL**: `/books/`
-  - **Method**: `GET`
-  - **Permissions**: Public
-  - **Description**: Retrieves a list of all books in the system.
+### Books
 
+- `GET /books/`: Retrieve a list of all books.
+- `POST /books/create/`: Create a new book (authentication required).
+- `GET /books/<id>/`: Retrieve a specific book by ID.
+- `PUT /books/<id>/update/`: Update a specific book by ID (authentication required).
+- `DELETE /books/<id>/delete/`: Delete a specific book by ID (authentication required).
 
-- **Create Book**
-  - **URL**: `/books/`
-  - **Method**: `POST`
-  - **Permissions**: Public
-  - **Description**: Creates a new book record. Requires title, publication_year, and author fields in the request body.
-
-
-- **Retrieve Book**
-  - **URL**: `/books/<int:pk>/`
-  - **Method**: `GET`
-  - **Permissions**: Authenticated
-  - **Description**: Retrieves the details of a specific book identified by its primary key (pk).
-
-
-- **Update Book**
-  - **URL**: `/books/<int:pk>/`
-  - **Method**: `PUT`
-  - **Permissions**: Authenticated
-  - **Description**: Updates the details of a specific book. Requires title, publication_year, and author fields in the request body.
-
-- **Delete Book**
-  - **URL**: `/books/<int:pk>/`
-  - **Method**: `DELETE`
-  - **Permissions**: Authenticated
-  - **Description**: Deletes the specified book identified by its primary key (pk).
+**Permissions:**
+- `GET /books/` and `GET /books/<id>/` are publicly accessible.
+- `POST /books/create/`, `PUT /books/<id>/update/`, and `DELETE /books/<id>/delete/` require authentication.
