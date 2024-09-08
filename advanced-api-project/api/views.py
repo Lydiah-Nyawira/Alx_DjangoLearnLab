@@ -5,7 +5,7 @@ from .models import Book
 from .serializers import BookSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters import rest_framework as filters
-from rest_framework.filters import DjangoFilterBackend, SearchFilter, OrderingFilter
+from rest_framework.filters import DjangoFilterBackend, OrderingFilter, SearchFilter
 
 class BookFilter(filters.FilterSet):
     title = filters.CharFilter(lookup_expr='icontains')
