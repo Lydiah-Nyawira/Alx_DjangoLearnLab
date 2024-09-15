@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Post
+from .models import Post, Comment
 
 # Extend Django's user creation form for the registration form to include additional fields
 class CustomUserCreationForm(UserCreationForm):
@@ -17,3 +17,11 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content']
+# CommentForm using Django’s ModelForm to facilitate comment creation and updating.
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
+        }
