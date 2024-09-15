@@ -20,7 +20,9 @@ urlpatterns = [
     path('post/<int:pk>/comments/new/', views.CommentCreateView.as_view(), name='add_comment'),
     path('comment/<int:pk>/update/', views.CommentUpdateView.as_view(), name='edit_comment'),
     path('comment/<int:pk>/delete/', views.CommentDeleteView.as_view(), name='delete_comment'),
-
+    # Tag and Search urls
+    path('search/', views.search_posts, name='search_posts'),  # Search URL
+    path('tags/<slug:tag_slug>/', views.tagged_posts, name='tagged_posts'),  # Tagged posts URL
 ]
 # serve static files during development
 if settings.DEBUG:
