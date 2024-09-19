@@ -6,16 +6,14 @@ from .models import CustomUser
 from .serializers import UserSerializer, UserLoginSerializer
 
 # Create your views here.
-class UserRegisterView(generics.CreateAPIView):
+class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
-class UserLoginView(generics.GenericAPIView):
+class LoginView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        return Response(serializer.validated_data)
