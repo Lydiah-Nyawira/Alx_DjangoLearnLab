@@ -8,4 +8,4 @@ class CustomUser(AbstractUser):
     followers = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='following')
 
     def __str__(self):
-        return self.username
+        return self.username    
