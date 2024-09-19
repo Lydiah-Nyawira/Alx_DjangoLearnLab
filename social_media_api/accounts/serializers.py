@@ -32,6 +32,11 @@ class UserLoginSerializer(serializers.Serializer):
         token, created = Token.objects.get_or_create(user=user)
         
         return {
-            'user': user,
+            'user': {
+                'username': user.username,
+                'bio': user.bio,
+                'profile_picture': user.profile_picture.url if user.profile_picture else None,
+
+                },
             'token': token.key  # Return the token as well
         }
