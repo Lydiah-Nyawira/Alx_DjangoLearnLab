@@ -48,9 +48,12 @@ class LikeViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, pk=None):
+        # Use get_object_or_404 to fetch the post
         post = get_object_or_404(Post, pk=pk)
+        
+        # Use get_or_create to check for existing like
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
 
-        # Check if the user has already liked the post
         if Like.objects.filter(user=request.user, post=post).exists():
             return Response({'detail': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
