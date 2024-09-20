@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, permissions, status
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
@@ -48,7 +48,7 @@ class LikeViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, pk=None):
-        post = Post.objects.get(pk=pk)
+        post = get_object_or_404(Post, pk=pk)
 
         # Check if the user has already liked the post
         if Like.objects.filter(user=request.user, post=post).exists():
