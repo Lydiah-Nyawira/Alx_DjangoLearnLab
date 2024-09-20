@@ -1,13 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
-from rest_framework.views import APIView
-from rest_framework.exceptions import ValidationError
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -46,18 +44,20 @@ class UserFeedViewSet(viewsets.ViewSet):
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
     
-class LikeAPIView(APIView):
+class LikeCreateAPIView(generics.CreateAPIView):
+    """
+    API view to like a post.
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk=None):
-        # Fetch the post using get_object_or_404
         post = get_object_or_404(Post, pk=pk)
 
         # Check if the user has already liked the post
         if Like.objects.filter(user=request.user, post=post).exists():
             return Response({'detail': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create a new like
+        # Create the like
         like = Like.objects.create(user=request.user, post=post)
 
         # Create a notification for the post author
@@ -71,8 +71,13 @@ class LikeAPIView(APIView):
 
         return Response(LikeSerializer(like).data, status=status.HTTP_201_CREATED)
 
+class LikeDestroyAPIView(generics.DestroyAPIView):
+    """
+    API view to unlike a post.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
     def delete(self, request, pk=None):
-        # Fetch the post using get_object_or_404
         post = get_object_or_404(Post, pk=pk)
 
         try:
