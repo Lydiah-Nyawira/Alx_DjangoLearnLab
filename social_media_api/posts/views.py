@@ -72,7 +72,7 @@ class LikeViewSet(viewsets.ViewSet):
         return Response(LikeSerializer(like).data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, pk=None):
-        post = Post.objects.get(pk=pk)
+        post = get_object_or_404(Post, pk=pk)
 
         try:
             like = Like.objects.get(user=request.user, post=post)
