@@ -6,6 +6,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
+from rest_framework.generics import CreateAPIView, DestroyAPIView
+from rest_framework.exceptions import ValidationError
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -44,39 +46,35 @@ class UserFeedViewSet(viewsets.ViewSet):
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
     
-class LikeViewSet(viewsets.ViewSet):
+class LikeCreateAPIView(CreateAPIView):
+    serializer_class = LikeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def create(self, request, pk=None):
-        # Use get_object_or_404 to fetch the post
-        post = get_object_or_404(Post, pk=pk)
+    def perform_create(self, serializer):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
         
-        # Use get_or_create to check for existing like
-        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        # Check if the user has already liked the post
+        if Like.objects.filter(user=self.request.user, post=post).exists():
+            raise ValidationError("You already liked this post.")
 
-        if Like.objects.filter(user=request.user, post=post).exists():
-            return Response({'detail': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Create the like
+        like = serializer.save(user=self.request.user, post=post)
 
-        # Create a new like
-        like = Like.objects.create(user=request.user, post=post)
-
-        # create_notification(request.user, post.author, 'liked your post', post)
+        # Create a notification
         Notification.objects.create(
-            actor=request.user,
+            actor=self.request.user,
             recipient=post.author,
             verb='liked your post',
             target_content_type=ContentType.objects.get_for_model(post),
             target_object_id=post.id
         )
 
-        return Response(LikeSerializer(like).data, status=status.HTTP_201_CREATED)
+        return like
 
-    def destroy(self, request, pk=None):
-        post = get_object_or_404(Post, pk=pk)
+class LikeDestroyAPIView(DestroyAPIView):
+    queryset = Like.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
-        try:
-            like = Like.objects.get(user=request.user, post=post)
-            like.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Like.DoesNotExist:
-            return Response({'detail': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+    def get_object(self):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        return get_object_or_404(Like, user=self.request.user, post=post)
