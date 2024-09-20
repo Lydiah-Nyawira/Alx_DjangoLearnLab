@@ -5,9 +5,9 @@ from .views import PostViewSet, CommentViewSet, UserFeedViewSet
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
 router.register(r'comments', CommentViewSet)
-router.register(r'feed', UserFeedViewSet, basename='user_feed')
 
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('feed/', UserFeedViewSet.as_view({'get': 'list'}), name='user-feed'),
 ]
