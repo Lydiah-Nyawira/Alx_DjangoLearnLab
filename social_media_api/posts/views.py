@@ -51,14 +51,14 @@ class LikeCreateAPIView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk=None):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         # Check if the user has already liked the post
         if Like.objects.filter(user=request.user, post=post).exists():
             return Response({'detail': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create the like
-        like = Like.objects.create(user=request.user, post=post)
+        like = Like.objects.get_or_create(user=request.user, post=post)
 
         # Create a notification for the post author
         Notification.objects.create(
@@ -78,10 +78,10 @@ class LikeDestroyAPIView(generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request, pk=None):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         try:
-            like = Like.objects.get(user=request.user, post=post)
+            like = Like.objects.get_or_create(user=request.user, post=post)
             like.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Like.DoesNotExist:
